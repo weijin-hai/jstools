@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .content_Wrap {
+            width: 1168px;
+            overflow: hidden;
+            margin: 0 auto;
+            border: 1px solid black;
+            height: 400px;
+            position: relative;
+        }
+
+        ul {
+            overflow: hidden;
+            height: 100%;
+            list-style: none;
+            position: absolute;
+            transition: all 0.3s;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            float: left;
+            height: 100%;
+            width: 256px;
+            margin-right: 48px;
+            border: 1px solid black;
+        }
+
+        .right {
+            position: absolute;
+            right: 0;
+            cursor: pointer;
+            top: 200px;
+        }
+
+        .left {
+            position: absolute;
+            left: 0;
+            cursor: pointer;
+            top: 200px;
+        }
+    </style>
+</head>
+<div id="root">
+    <div class="content_Wrap">
+        <ul class="ul" :style="'left:'+ -currentMark*304+'px;width:'+(list.length+1)*305+'px'">
+            <li v-for="item,index in list" :key="index">
+            </li>
+        </ul>
+
+        <div class="right" @click="debounceRight">
+            往右
+        </div>
+        <div class="left" @click="debounceLeft">
+            往左
+        </div>
+    </div>
+</div>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        function VueDebounce(fnName, time) {
+            let timeout = null;
+            return function () {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+                timeout = setTimeout(() => {
+                    this[fnName]();
+                }, time);
+            };
+        }
+        new Vue({
+            el: '#root',
+            data() {
+                return {
+                    name: "wewewew",
+                    currentMark: 0,
+                    list: [{
+                        title: '1'
+                    }, {
+                        title: '2'
+                    }, {
+                        title: '3'
+                    }, {
+                        title: '4'
+                    }, {
+                        title: '5'
+                    }, {
+                        title: '6'
+                    }]
+                }
+            },
+            methods: {
+                handdleRight() {
+                    let ul = document.querySelector(".ul")
+                    let left = ul.offsetLeft
+                    // console.log(left)
+                    let count = this.list.length - 4
+                    let currentMark = this.currentMark;
+                    console.log(count, currentMark)
+                    if (currentMark < count) {
+                        this.currentMark += 1
+                        return
+                    } else {
+                        this.currentMark = 0
+                    }
+                },
+                handdleLeft() {
+                    var ul = document.querySelector(".ul")
+                    let left = ul.offsetLeft
+                    console.log(left)
+                    if (left == 0) {
+                        this.currentMark = this.list.length - 4
+                    } else {
+                        this.currentMark -= 1
+                    }
+                },
+                debounceLeft: VueDebounce('handdleLeft', 400),
+                debounceRight: VueDebounce('handdleRight', 400)
+            },
+        })
+
+
+    </script>
+
+</body>
+
+</html>
